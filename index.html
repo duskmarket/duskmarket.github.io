@@ -7,12 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>DUSK MARKET</title>
     <meta name="og:image" content="./img/front.png"/>
-    <style>
-        /* http://meyerweb.com/eric/tools/css/reset/
-   v2.0-modified | 20110126
-   License: none (public domain)
-*/
 
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
+
+    <style>
         html, body, div, span, applet, object, iframe,
         h1, h2, h3, h4, h5, h6, p, blockquote, pre,
         a, abbr, acronym, address, big, cite, code,
@@ -256,7 +254,7 @@
         input[type="submit"] {
             -webkit-appearance: button; /* 2 */
             cursor: pointer; /* 3 */
-            *overflow: visible;  /* 4 */
+            *overflow: visible; /* 4 */
         }
 
         /**
@@ -375,23 +373,224 @@
             color: #000;
             padding: 0.2em 0;
         }
+
         .img {
             width: 100vw;
         }
+
         .img img {
             display: block;
             width: 100%;
+        }
+
+        h2 {
+            padding: 10px 0;
+        }
+
+        h2 span {
+            display: inline-block;
+            width: 18px;
+        }
+
+        .text1 {
+            font-size: 3vw;
+        }
+
+        .text2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 6vw;
+        }
+
+        .text3 {
+            font-size: 5vw;
         }
     </style>
 </head>
 </head>
 <body>
 <div class="img">
-    <marquee direction="left"><a href="https://goo.gl/maps/XSnkmq5hsgHBz8BE8" target="_blank">FE26 FE26 FE26 FE26 FE26 FE26 FE26 FE26 FE26</a></marquee>
+    <div class="marquee3k text1" data-speed="1.0" data-pausable="bool"
+         onclick="location.href='https://goo.gl/maps/XSnkmq5hsgHBz8BE8'">
+        <h2>FE26<span></span></h2>
+    </div>
     <img src="./img/1.gif" alt="">
-    <marquee direction="left"><a href="#none" target="_blank">DUSK MARKET DUSK MARKET DUSK MARKET DUSK MARKET DUSK MARKET</a></marquee>
+    <div class="marquee3k text2" data-speed="1.1" data-pausable="bool">
+        <h2>DUSK MARKET<span></span></h2>
+    </div>
     <img src="./img/2.gif" alt="">
-    <marquee direction="left"><a href="https://www.instagram.com/just___eleven/" target="_blank">just___eleven just___eleven just___eleven just___eleven</a></marquee>
+    <div class="marquee3k text3" data-speed="1.0" data-pausable="bool"
+         onclick="location.href='https://www.instagram.com/just___eleven/'">
+        <h2>JUST ELEVEN<span></span></h2>
+    </div>
 </div>
+
+<script>
+    /**
+     * MARQUEE 3000 MARQUEE 3000 MARQUEE 3000 MARQUEE 3000 MARQUEE 3000
+     * http://github.com/ezekielaquino/marquee3000
+     * Marquees for the new millenium v1.0
+     * MIT License
+     */
+
+    ;(function (root, factory) {
+        if (typeof define === 'function' && define.amd) {
+            define([], factory);
+        } else if (typeof exports === 'object') {
+            module.exports = factory();
+        } else {
+            root.Marquee3k = factory();
+        }
+
+    }(this, function () {
+        'use strict';
+
+        class Marquee3k {
+            constructor(element, options) {
+                this.element = element;
+                this.selector = options.selector;
+                this.speed = element.dataset.speed || 0.25;
+                this.pausable = element.dataset.pausable;
+                this.reverse = element.dataset.reverse;
+                this.paused = false;
+                this.parent = element.parentElement;
+                this.parentProps = this.parent.getBoundingClientRect();
+                this.content = element.children[0];
+                this.innerContent = this.content.innerHTML;
+                this.wrapStyles = '';
+                this.offset = 0;
+
+                this._setupWrapper();
+                this._setupContent();
+                this._setupEvents();
+
+                this.wrapper.appendChild(this.content);
+                this.element.appendChild(this.wrapper);
+            }
+
+            _setupWrapper() {
+                this.wrapper = document.createElement('div');
+                this.wrapper.classList.add('marquee3k__wrapper');
+                this.wrapper.style.whiteSpace = 'nowrap';
+            }
+
+            _setupContent() {
+                this.content.classList.add(`${this.selector}__copy`);
+                this.content.style.display = 'inline-block';
+                this.contentWidth = this.content.offsetWidth;
+
+                this.requiredReps = this.contentWidth > this.parentProps.width ? 2 : Math.ceil((this.parentProps.width - this.contentWidth) / this.contentWidth) + 1;
+
+                for (let i = 0; i < this.requiredReps; i++) {
+                    this._createClone();
+                }
+
+                if (this.reverse) {
+                    this.offset = this.contentWidth * -1;
+                }
+
+                this.element.classList.add('is-init');
+            }
+
+            _setupEvents() {
+                this.element.addEventListener('mouseenter', () => {
+                    if (this.pausable) this.paused = true;
+                });
+
+                this.element.addEventListener('mouseleave', () => {
+                    if (this.pausable) this.paused = false;
+                });
+            }
+
+            _createClone() {
+                const clone = this.content.cloneNode(true);
+                clone.style.display = 'inline-block';
+                clone.classList.add(`${this.selector}__copy`);
+                this.wrapper.appendChild(clone);
+            }
+
+            animate() {
+                if (!this.paused) {
+                    const isScrolled = this.reverse ? this.offset < 0 : this.offset > this.contentWidth * -1;
+                    const direction = this.reverse ? -1 : 1;
+                    const reset = this.reverse ? this.contentWidth * -1 : 0;
+
+                    if (isScrolled) this.offset -= this.speed * direction;
+                    else this.offset = reset;
+
+                    this.wrapper.style.whiteSpace = 'nowrap';
+                    this.wrapper.style.transform = `translate(${this.offset}px, 0) translateZ(0)`;
+                }
+            }
+
+            _refresh() {
+                this.contentWidth = this.content.offsetWidth;
+            }
+
+            repopulate(difference, isLarger) {
+                this.contentWidth = this.content.offsetWidth;
+
+                if (isLarger) {
+                    const amount = Math.ceil(difference / this.contentWidth) + 1;
+
+                    for (let i = 0; i < amount; i++) {
+                        this._createClone();
+                    }
+                }
+            }
+
+            static refresh(index) {
+                MARQUEES[index]._refresh();
+            }
+
+            static refreshAll() {
+                for (let i = 0; i < MARQUEES.length; i++) {
+                    MARQUEES[i]._refresh();
+                }
+            }
+
+            static init(options = {selector: 'marquee3k'}) {
+                window.MARQUEES = [];
+                const marquees = Array.from(document.querySelectorAll(`.${options.selector}`));
+                let previousWidth = window.innerWidth;
+                let timer;
+
+                for (let i = 0; i < marquees.length; i++) {
+                    const marquee = marquees[i];
+                    const instance = new Marquee3k(marquee, options);
+                    MARQUEES.push(instance);
+                }
+
+                animate();
+
+                function animate() {
+                    for (let i = 0; i < MARQUEES.length; i++) {
+                        MARQUEES[i].animate();
+                    }
+                    window.requestAnimationFrame(animate);
+                }
+
+                window.addEventListener('resize', () => {
+                    clearTimeout(timer);
+
+                    timer = setTimeout(() => {
+                        const isLarger = previousWidth < window.innerWidth;
+                        const difference = window.innerWidth - previousWidth;
+
+                        for (let i = 0; i < MARQUEES.length; i++) {
+                            MARQUEES[i].repopulate(difference, isLarger);
+                        }
+
+                        previousWidth = this.innerWidth;
+                    });
+                }, 250);
+            }
+        }
+
+        return Marquee3k;
+
+    }));
+
+    Marquee3k.init()
+</script>
 </body>
 </html>
